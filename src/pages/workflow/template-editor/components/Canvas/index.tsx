@@ -4,14 +4,15 @@ import React, { useEffect, useRef } from 'react';
 
 import { useGraphContext } from '../../context/graph.context';
 import { useGraph } from '../../hooks/useGraph';
+import { useDataContext } from '../../context/data.context';
 
 interface CanvasProps {
-  onNodeSelect: (node: any) => void;
 }
 
-const Canvas: React.FC<CanvasProps> = ({ onNodeSelect }) => {
+const Canvas: React.FC<CanvasProps> = () => {
   const { containerRef, miniMapRef, graphEntity: graph, dndEntity: dnd, getGraphAreaInfo, isReady } = useGraph();
   const { setGraph, setGraphDnd, setHistory } = useGraphContext()
+  const { setSelectedNode } = useDataContext()
 
 
   useEffect(() => {
@@ -68,10 +69,42 @@ const Canvas: React.FC<CanvasProps> = ({ onNodeSelect }) => {
 
     // 事件：节点选择
     graph.on('node:click', ({ node }) => {
-      onNodeSelect(node);
+      setSelectedNode(node);
     });
 
-  }, [isReady, onNodeSelect])
+    // graph.on('cell:mouseenter', ({ cell }) => {
+    //   if (cell.isNode()) {
+    //     cell.addTools([
+    //       {
+    //         name: 'boundary',
+    //         args: {
+    //           attrs: {
+    //             fill: '#7c68fc',
+    //             stroke: '#333',
+    //             'stroke-width': 1,
+    //             'fill-opacity': 0.2,
+    //           },
+    //         },
+    //       },
+    //       {
+    //         name: 'button-remove',
+    //         args: {
+    //           x: 0,
+    //           y: 0,
+    //           offset: { x: 10, y: 10 },
+    //         },
+    //       },
+    //     ])
+    //   } else {
+    //     cell.addTools(['vertices', 'segments'])
+    //   }
+    // })
+
+    // graph.on('cell:mouseleave', ({ cell }) => {
+    //   cell.removeTools()
+    // })
+
+  }, [isReady])
 
   return (
     <div className="relative w-full h-full">

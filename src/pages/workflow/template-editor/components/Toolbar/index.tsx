@@ -1,15 +1,16 @@
 // 文件路径: src/components/NodeList.tsx
 
 import React from 'react';
-import type { Graph } from '@antv/x6';
 import { saveAs } from 'file-saver';
-import { Button, Card, List, Space, message } from 'antd';
+import { Button, Space, message } from 'antd';
 import type { GraphContextType } from '../../context/graph.context';
 import { useGraphContext } from '../../context/graph.context';
+import { useDataContext } from '../../context/data.context';
 
 const Toolbar: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { graph, history } = useGraphContext() as GraphContextType;
+  const { progress, setProgress } = useDataContext();
 
   const handleZoomIn = () => {
     if (graph) graph.zoom(0.1);
@@ -97,6 +98,7 @@ const Toolbar: React.FC = () => {
         <Button onClick={() => graph?.exportSVG?.('diagram.svg', { copyStyles: false })}>导出 SVG</Button>
         <Button onClick={() => graph?.exportSVG?.('diagram.png', { copyStyles: false })}>导出 PNG</Button>
         <Button onClick={() => graph?.exportJPEG?.('diagram.jpg', { copyStyles: false })}>导出 JPG</Button>
+        <Button onClick={() => setProgress(progress + 10)}>增加进度</Button>
       </Space>
     </section>
   );

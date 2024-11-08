@@ -7,37 +7,38 @@ import PropertyEditor from './components/PropertyEditor';
 import Toolbar from './components/Toolbar';
 import NodeList from './components/NodeList';
 import { GraphProvider } from './context/graph.context';
+import { DataProvider } from './context/data.context';
 
 const { Header, Sider } = Layout;
 
 export const Component: React.FC = () => {
-  const [selectedNode, setSelectedNode] = useState<any>(null);
-
   return (
-    <GraphProvider>
-      <Layout style={{ height: '100%' }}>
-        {/* 左侧节点列表 */}
-
-        <Header className="relative left-0 top-0 bg-white">
-          <Toolbar />
-        </Header>
+    <DataProvider>
+      <GraphProvider>
         <Layout style={{ height: '100%' }}>
-          <Sider
-            width={200}
-            theme="light"
-          >
-            <NodeList />
-          </Sider>
-          <Canvas onNodeSelect={setSelectedNode} />
-          {/* 右侧属性编辑器 */}
-          <Sider
-            width={300}
-            theme="light"
-          >
-            <PropertyEditor selectedNode={selectedNode} />
-          </Sider>
+          {/* 左侧节点列表 */}
+
+          <Header className="relative left-0 top-0 bg-white">
+            <Toolbar />
+          </Header>
+          <Layout style={{ height: '100%' }}>
+            <Sider
+              width={200}
+              theme="light"
+            >
+              <NodeList />
+            </Sider>
+            <Canvas />
+            {/* 右侧属性编辑器 */}
+            <Sider
+              width={300}
+              theme="light"
+            >
+              <PropertyEditor />
+            </Sider>
+          </Layout>
         </Layout>
-      </Layout>
-    </GraphProvider>
+      </GraphProvider>
+    </DataProvider>
   );
 };

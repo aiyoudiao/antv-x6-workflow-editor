@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, Form, Input, InputNumber } from 'antd';
+import { useDataContext } from '../../context/data.context';
 
-interface PropertyEditorProps {
-  selectedNode: any;
-}
+interface PropertyEditorProps {}
 
-const PropertyEditor: React.FC<PropertyEditorProps> = ({ selectedNode }) => {
+const PropertyEditor: React.FC<PropertyEditorProps> = ({}) => {
   const [form] = Form.useForm();
+  const { selectedNode } = useDataContext();
   const [nodeAttributes, setNodeAttributes] = useState({});
 
   useEffect(() => {
