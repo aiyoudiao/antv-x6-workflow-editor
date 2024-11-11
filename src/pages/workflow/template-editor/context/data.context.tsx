@@ -8,6 +8,8 @@ export interface DataContextType {
   setProgress: React.Dispatch<React.SetStateAction<number>>;
   selectedNode: any;
   setSelectedNode: React.Dispatch<React.SetStateAction<any>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DataPortalProvider = Portal.getProvider();
@@ -23,10 +25,13 @@ const DataContext = createContext<DataContextType | undefined>({});
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [selectedNode, setSelectedNode] = useState<any>({});
   const [cardList, setCardList] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
 
   return (
-    <DataContext.Provider value={{ cardList, setCardList, progress, setProgress, selectedNode, setSelectedNode }}>
+    <DataContext.Provider
+      value={{ cardList, setCardList, progress, setProgress, selectedNode, setSelectedNode, loading, setLoading }}
+    >
       <DataPortalProvider></DataPortalProvider>
       {children}
     </DataContext.Provider>

@@ -85,8 +85,6 @@ export function createRouter({ initRoutes, mode, opt, getReactRoutes, init }: Ro
   }
 
   function onBeforeRouteChange({ nextLocation }: Parameters<BlockerFunction>[0]) {
-    console.log(nextLocation, 'nextLocation');
-
     const to = resolve(nextLocation);
 
     if (to.fullPath === currentRoute.fullPath) {
@@ -181,7 +179,6 @@ export function createRouter({ initRoutes, mode, opt, getReactRoutes, init }: Ro
         query: cleanParams(rawLocation.query)
       });
     }
-    console.log(matcherLocation);
 
     const matchedRoute = matcher.resolve(matcherLocation, current);
 
@@ -207,12 +204,10 @@ export function createRouter({ initRoutes, mode, opt, getReactRoutes, init }: Ro
     return new Promise((resolved, reject) => {
       init(currentRoute.fullPath)
         .then(res => {
-          console.log(res);
-
           if (!res) {
             reactRouter.initialize();
           } else {
-            console.log(resolve(res));
+            resolve(res);
 
             reactRouter.initialize().navigate(resolve(res).fullPath.replace(opt?.basename, ''));
           }
@@ -247,7 +242,6 @@ export function createRouter({ initRoutes, mode, opt, getReactRoutes, init }: Ro
 
   function push(to: RouteLocationNamedRaw | string | Location) {
     const resolved = typeof to === 'string' ? { fullPath: to } : resolve(to);
-    console.log(resolved);
 
     if (!resolved && typeof to !== 'string') {
       const failure = createRouterError<NavigationFailure>(ErrorTypes.NAVIGATION_DUPLICATED, {
@@ -258,10 +252,10 @@ export function createRouter({ initRoutes, mode, opt, getReactRoutes, init }: Ro
       return Promise.reject(failure);
     }
 
-    const target = resolved.fullPath;
+    let target = resolved.fullPath;
 
     const state = 'state' in resolved ? resolved.state : null;
-    console.log(target.replace(opt?.basename, ''));
+    target = target.replace(opt?.basename, '');
 
     if (target !== currentRoute.fullPath) {
       reactRouter.navigate(target.replace(opt?.basename, ''), { state });

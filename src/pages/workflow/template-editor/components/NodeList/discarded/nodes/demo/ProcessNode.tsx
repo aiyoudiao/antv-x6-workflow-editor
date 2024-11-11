@@ -3,7 +3,7 @@ import type { Node } from '@antv/x6';
 import { Graph } from '@antv/x6';
 import { register } from '@antv/x6-react-shape';
 import { Card, Progress } from 'antd';
-import { useDataContext } from '../../../context/data.context';
+import { useDataContext } from '../../../../context/data.context';
 
 const NodeComponent = ({ node }: { node: Node }) => {
   // const { progress } = node.getData();

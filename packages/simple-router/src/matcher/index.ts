@@ -127,11 +127,9 @@ class CreateRouterMatcher {
     let name: string | undefined;
     let params: Record<string, any> = {};
     let fullPath: string = '';
-    console.log(this.matchers);
 
     if ('name' in location) {
       matcher = this.matcherMap.get(location.name);
-      console.log(matcher);
 
       if (!matcher) {
         matcher = this.matchers[0];
@@ -140,7 +138,6 @@ class CreateRouterMatcher {
       name = matcher.record.name;
       params = cleanParams(location.params || {});
       fullPath = generatePath(matcher.record.path, params);
-      console.log(fullPath);
 
       query = location.query || {};
       const queryParams = stringifyQuery(query);
@@ -156,13 +153,8 @@ class CreateRouterMatcher {
       // no need to resolve the path with the matcher as it was provided
       // this also allows the user to control the encoding
       path = location.pathname;
-      console.log(path);
-
-      console.log(location.pathname);
 
       matcher = this.matchers.slice(1).find(m => matchPath(m.record.path, location.pathname));
-
-      console.log(matcher, 'matcher'); // matcher should have a value after the loop
 
       query = getQueryParams(location.search);
 
@@ -193,7 +185,6 @@ class CreateRouterMatcher {
       matched.unshift(parentMatcher.record);
       parentMatcher = parentMatcher.parent;
     }
-    console.log(path, 3, fullPath);
 
     return {
       fullPath,

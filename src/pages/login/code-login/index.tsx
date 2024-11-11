@@ -9,7 +9,6 @@ export const Component = () => {
 
   async function handleSubmit() {
     const params = await form.validateFields();
-    console.log(params);
 
     // request to reset password
     window.$message?.success(t('page.login.common.validateSuccess'));

@@ -36,31 +36,95 @@ const Canvas: React.FC<CanvasProps> = () => {
       });
     });
 
-    graph.bindKey('ctrl+c', () => {
-      const cells = graph.getSelectedCells();
+    graph.bindKey(['meta+c', 'ctrl+c'], () => {
+      const cells = graph.getSelectedCells()
       if (cells.length) {
-        graph.copy(cells);
+        graph.copy(cells)
       }
-      return false;
-    });
-
-    graph.bindKey('ctrl+v', () => {
+      return false
+    })
+    graph.bindKey(['meta+x', 'ctrl+x'], () => {
+      const cells = graph.getSelectedCells()
+      if (cells.length) {
+        graph.cut(cells)
+      }
+      return false
+    })
+    graph.bindKey(['meta+v', 'ctrl+v'], () => {
       if (!graph.isClipboardEmpty()) {
-        const cells = graph.paste({ offset: 32 });
-        graph.cleanSelection();
-        graph.select(cells);
+        const cells = graph.paste({ offset: 32 })
+        graph.cleanSelection()
+        graph.select(cells)
       }
-      return false;
-    });
+      return false
+    })
 
-    graph.bindKey('delete', () => {
-      const cells = graph.getSelectedCells();
+    // undo redo
+    graph.bindKey(['meta+z', 'ctrl+z'], () => {
+      if (graph.canUndo()) {
+        graph.undo()
+      }
+      return false
+    })
+    graph.bindKey(['meta+shift+z', 'ctrl+shift+z'], () => {
+      if (graph.canRedo()) {
+        graph.redo()
+      }
+      return false
+    })
+
+    // select all
+    graph.bindKey(['meta+a', 'ctrl+a'], () => {
+      const nodes = graph.getNodes()
+      if (nodes) {
+        graph.select(nodes)
+      }
+    })
+
+    // delete
+    graph.bindKey(['backspace', 'delete'], () => {
+      const cells = graph.getSelectedCells()
       if (cells.length) {
-        graph.removeCells(cells);
+        graph.removeCells(cells)
       }
+    })
 
-      return false;
-    });
+    // zoom
+    graph.bindKey(['ctrl+1', 'meta+1'], () => {
+      const zoom = graph.zoom()
+      if (zoom < 1.5) {
+        graph.zoom(0.1)
+      }
+    })
+    graph.bindKey(['ctrl+2', 'meta+2'], () => {
+      const zoom = graph.zoom()
+      if (zoom > 0.5) {
+        graph.zoom(-0.1)
+      }
+    })
+
+    // 控制连接桩显示/隐藏
+    const showPorts = (ports: NodeListOf<SVGElement>, show: boolean) => {
+      for (let i = 0, len = ports.length; i < len; i += 1) {
+        ports[i].style.visibility = show ? 'visible' : 'hidden'
+      }
+    }
+    graph.on('node:mouseenter', () => {
+      const container = containerRef.current!
+      const ports = container.querySelectorAll(
+        '.x6-port-body',
+      ) as NodeListOf<SVGElement>
+      showPorts(ports, true)
+    })
+    graph.on('node:mouseleave', () => {
+      const container = containerRef.current!
+      const ports = container.querySelectorAll(
+        '.x6-port-body',
+      ) as NodeListOf<SVGElement>
+      showPorts(ports, false)
+    })
+
+
 
     window.__x6_instances__ = [];
     setGraph(graph);
@@ -72,37 +136,43 @@ const Canvas: React.FC<CanvasProps> = () => {
       setSelectedNode(node);
     });
 
-    // graph.on('cell:mouseenter', ({ cell }) => {
-    //   if (cell.isNode()) {
-    //     cell.addTools([
-    //       {
-    //         name: 'boundary',
-    //         args: {
-    //           attrs: {
-    //             fill: '#7c68fc',
-    //             stroke: '#333',
-    //             'stroke-width': 1,
-    //             'fill-opacity': 0.2,
-    //           },
-    //         },
-    //       },
-    //       {
-    //         name: 'button-remove',
-    //         args: {
-    //           x: 0,
-    //           y: 0,
-    //           offset: { x: 10, y: 10 },
-    //         },
-    //       },
-    //     ])
-    //   } else {
-    //     cell.addTools(['vertices', 'segments'])
-    //   }
-    // })
 
-    // graph.on('cell:mouseleave', ({ cell }) => {
-    //   cell.removeTools()
-    // })
+
+    graph.on('cell:mouseenter', ({ cell }) => {
+      // if (cell.isNode()) {
+      //   cell.addTools([
+      //     {
+      //       name: 'boundary',
+      //       args: {
+      //         attrs: {
+      //           fill: '#7c68fc',
+      //           stroke: '#333',
+      //           'stroke-width': 1,
+      //           'fill-opacity': 0.2,
+      //         },
+      //       },
+      //     },
+      //     {
+      //       name: 'button-remove',
+      //       args: {
+      //         x: 0,
+      //         y: 0,
+      //         offset: { x: 10, y: 10 },
+      //       },
+      //     },
+      //   ])
+      // } else {
+      if (cell.isEdge())
+        cell.addTools(['vertices', 'segments'])
+      // }
+    })
+
+    graph.on('cell:mouseleave', ({ cell }) => {
+      if (cell.isEdge()) {
+        cell.removeTools()
+      }
+    })
+
 
   }, [isReady])
 

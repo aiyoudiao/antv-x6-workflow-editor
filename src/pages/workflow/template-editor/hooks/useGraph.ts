@@ -12,7 +12,7 @@ import { Scroller } from '@antv/x6-plugin-scroller';
 import { MiniMap } from '@antv/x6-plugin-minimap';
 import { Transform } from '@antv/x6-plugin-transform';
 
-import { Graph } from '@antv/x6';
+import { Graph, Shape } from '@antv/x6';
 
 export const useGraph = () => {
   const [isReady, setIsReady] = useState(false);
@@ -65,7 +65,29 @@ export const useGraph = () => {
         minScale: 0.2,
         maxScale: 4
       },
+      // scaling: { // 视口变换
+      //   min: 0.05, // 默认值为 0.01
+      //   max: 12, // 默认值为 16
+      // },
+      // 画布平移, 画布平移和 Scroller 滚动画布 不能同时开启
+      // panning: {
+      //   enabled: true,
+      //   modifiers: [], // 快捷键
+      //   eventTypes: ['leftMouseDown'],
+      // },
       highlighting: {
+        // 连接桩可以被连接时在连接桩外围围渲染一个包围框
+        magnetAvailable: {
+          name: 'stroke',
+          args: {
+            attrs: {
+              fill: '#fff',
+              stroke: '#A4DEB1',
+              strokeWidth: 4
+            }
+          }
+        },
+        // 连接桩吸附连线时在连接桩外围围渲染一个包围框
         magnetAdsorbed: {
           name: 'stroke',
           args: {
@@ -77,208 +99,62 @@ export const useGraph = () => {
           }
         }
       },
-      connecting: {
-        snap: true,
-        allowBlank: false,
-        allowLoop: false,
-        highlight: true,
-        connectionPoint: 'anchor',
-        anchor: 'center',
-        validateMagnet({ magnet }) {
-          return magnet.getAttribute('port-group') !== 'top';
-        },
-        createEdge() {
-          return graph.createEdge({
-            shape: 'dag-edge',
-            attrs: {
-              line: {
-                strokeDasharray: '5 5'
-              }
-            },
-            zIndex: -1
+      embedding: {
+        enabled: true,
+        findParent({ node }) {
+          // 获取移动节点的包围盒
+          const bbox = node.getBBox();
+          // 找到 data 中配置 { parent: true } 的节点，并且移动节点和找到的节点包围盒相交时，返回 true
+          return this.getNodes().filter(node => {
+            const data = node.getData<{ parent: boolean }>();
+            if (data && data.parent) {
+              const targetBBox = node.getBBox();
+              return bbox.isIntersectWithRect(targetBBox);
+            }
+            return false;
           });
         }
-      }
-      // scaling: { // 视口变换
-      //   min: 0.05, // 默认值为 0.01
-      //   max: 12, // 默认值为 16
-      // },
-      // 画布平移, 画布平移和 Scroller 滚动画布 不能同时开启
-      // panning: {
-      //   enabled: true,
-      //   modifiers: [], // 快捷键
-      //   eventTypes: ['leftMouseDown'],
-      // },
-      // connecting: {
-      //   connector: 'smooth',
-      //   connectionPoint: 'boundary',
-      //   snap: true,
-
-      //   allowNode: false,
-      //   allowBlank: false,
-      //   highlight: true,
-      //   createEdge() {
-      //     return this.createEdge({
-      //       shape: 'edge',
-      //       attrs: {
-      //         line: {
-      //           stroke: '#5F95FF',
-      //           strokeWidth: 2,
-      //           targetMarker: {
-      //             name: 'block',
-      //             width: 12,
-      //             height: 8
-      //           }
-      //         }
-      //       }
-      //     });
-      //   }
-      // },
-      // highlighting: {
-      //   // 连接桩可以被连接时在连接桩外围围渲染一个包围框
-      //   magnetAvailable: {
-      //     name: 'stroke',
-      //     args: {
-      //       attrs: {
-      //         fill: '#fff',
-      //         stroke: '#A4DEB1',
-      //         strokeWidth: 4
-      //       }
-      //     }
-      //   },
-      //   // 连接桩吸附连线时在连接桩外围围渲染一个包围框
-      //   magnetAdsorbed: {
-      //     name: 'stroke',
-      //     args: {
-      //       attrs: {
-      //         fill: '#fff',
-      //         stroke: '#31d0c6',
-      //         strokeWidth: 4
-      //       }
-      //     }
-      //   }
-      // },
-      // embedding: {
-      //   enabled: true,
-      //   findParent({ node }) {
-      //     // 获取移动节点的包围盒
-      //     const bbox = node.getBBox();
-      //     // 找到 data 中配置 { parent: true } 的节点，并且移动节点和找到的节点包围盒相交时，返回 true
-      //     return this.getNodes().filter(node => {
-      //       const data = node.getData<{ parent: boolean }>();
-      //       if (data && data.parent) {
-      //         const targetBBox = node.getBBox();
-      //         return bbox.isIntersectWithRect(targetBBox);
-      //       }
-      //       return false;
-      //     });
-      //   }
-      // }
-
-      // interacting: true // 是否支持交互
-    });
-
-    graph.addEdge({
-      source: { x: 240, y: 40 },
-      target: { x: 280, y: 180 },
-      vertices: [{ x: 240, y: 140 }]
-    });
-
-    graph.addEdge({
-      source: { x: 340, y: 40 },
-      target: { x: 380, y: 180 },
-      vertices: [{ x: 340, y: 140 }],
-      connector: {
-        name: 'rounded',
-        args: { radius: 10 }
       },
-      attrs: {
-        line: {
-          targetMarker: 'classic',
-          stroke: '#f5222d'
-        }
-      }
-    });
-
-    graph.addEdge({
-      source: { x: 440, y: 40 },
-      target: { x: 480, y: 180 },
-      vertices: [{ x: 440, y: 140 }],
-      connector: { name: 'smooth' },
-      attrs: {
-        line: {
-          stroke: '#faad14',
-          targetMarker: 'classic'
-        }
-      }
-    });
-
-    graph.addEdge({
-      source: { x: 540, y: 40 },
-      target: { x: 580, y: 180 },
-      vertices: [{ x: 540, y: 140 }],
-      connector: { name: 'smooth' },
-      attrs: {
-        line: {
-          stroke: '#1890ff',
-          strokeDasharray: 5,
-          targetMarker: 'classic',
-          style: {
-            animation: 'ant-line 30s infinite linear'
+      connecting: {
+        router: 'manhattan',
+        connector: {
+          name: 'rounded',
+          args: {
+            radius: 8
           }
+        },
+        anchor: 'center',
+        connectionPoint: 'anchor',
+
+        allowNode: false,
+        allowBlank: false,
+        highlight: true,
+        snap: {
+          radius: 20
+        },
+        createEdge() {
+          return new Shape.Edge({
+            attrs: {
+              line: {
+                stroke: '#5F95FF',
+                strokeWidth: 2,
+                targetMarker: {
+                  name: 'block',
+                  width: 12,
+                  height: 8
+                }
+              }
+            },
+            zIndex: 0
+          });
+        },
+        validateConnection({ targetMagnet }) {
+          return Boolean(targetMagnet);
         }
-      }
-    });
+      },
 
-    graph.addEdge({
-      source: { x: 240, y: 240 },
-      target: { x: 280, y: 380 },
-      vertices: [{ x: 240, y: 340 }],
-      router: { name: 'er' }
+      interacting: true // 是否支持交互
     });
-
-    graph.addEdge({
-      source: { x: 340, y: 240 },
-      target: { x: 380, y: 380 },
-      vertices: [{ x: 340, y: 340 }],
-      router: { name: 'orth' },
-      connector: { name: 'rounded' },
-      attrs: {
-        line: {
-          targetMarker: 'classic',
-          stroke: '#f5222d'
-        }
-      }
-    });
-
-    graph.addEdge({
-      source: { x: 440, y: 240 },
-      target: { x: 480, y: 380 },
-      vertices: [{ x: 440, y: 340 }],
-      router: { name: 'manhattan' },
-      connector: { name: 'rounded' },
-      attrs: {
-        line: {
-          stroke: '#faad14',
-          targetMarker: 'classic'
-        }
-      }
-    });
-
-    graph.addEdge({
-      source: { x: 540, y: 240 },
-      target: { x: 580, y: 380 },
-      vertices: [{ x: 540, y: 360 }],
-      router: { name: 'metro' },
-      attrs: {
-        line: {
-          stroke: '#1890ff',
-          strokeDasharray: 5,
-          targetMarker: 'classic'
-        }
-      }
-    });
-
     window.__graphEntity = graph;
 
     // 插件 导出
@@ -297,12 +173,12 @@ export const useGraph = () => {
       })
     );
     // 插件 选择区域
-    // graph.use(
-    //   new Selection({
-    //     enabled: true,
-    //     showNodeSelectionBox: true
-    //   })
-    // );
+    graph.use(
+      new Selection({
+        enabled: true,
+        showNodeSelectionBox: true
+      })
+    );
     // 插件 快捷键
     graph.use(
       new Keyboard({
@@ -340,7 +216,13 @@ export const useGraph = () => {
       })
     );
 
-    // // 插件 图形变换
+    // 插件 图形变换
+    graph.use(
+      new Transform({
+        // resizing: true,
+        rotating: true
+      })
+    );
     // graph.use(
     //   new Transform({
     //     rotating: {
