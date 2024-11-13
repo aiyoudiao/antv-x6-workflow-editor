@@ -19,19 +19,8 @@ const Canvas: React.FC<CanvasProps> = () => {
   const { setSelectedNode } = useDataContext()
 
 
-  // 防抖函数
-  const debounce = useCallback((func: Function, wait: number) => {
-    let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
-    };
-  }, []);
 
-  const handleResize = useCallback(debounce((graph: Graph) => {
-    const { graphWidth, graphHeight } = getGraphAreaInfo();
-    graph.resize(graphWidth, graphHeight);
-  }, 200), [getGraphAreaInfo, graph]);
+
 
   useEffect(() => {
     if (!isReady) {
@@ -41,8 +30,22 @@ const Canvas: React.FC<CanvasProps> = () => {
     const containerParent = containerParentRef.current;
     if (!containerParent || !graph) return;
 
+    // 防抖函数
+    const debounce = (func: Function) => {
+      let frame: number;
+      return (...args: any[]) => {
+        if (frame) cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          func(...args);
+        });
+      };
+    };
+
     // 监听画布外层容器的大小变化
-    const resizeObserver = new ResizeObserver(() => handleResize(graph));
+    const resizeObserver = new ResizeObserver(() => (debounce((graph: Graph) => {
+      const { graphWidth, graphHeight } = getGraphAreaInfo();
+      graph.resize(graphWidth, graphHeight);
+    }))(graph));
 
     resizeObserver.observe(containerParent);
 
