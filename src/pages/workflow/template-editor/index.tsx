@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Layout } from 'antd';
 import Canvas from './components/Canvas';
-import PropertyEditor from './components/PropertyEditor';
 import Toolbar from './components/Toolbar';
 import NodeList from './components/NodeList';
 import { GraphProvider } from './context/graph.context';
@@ -30,12 +29,12 @@ export const Component: React.FC = () => {
             </Sider>
             <Canvas />
             {/* 右侧属性编辑器 */}
-            <Sider
+            {/* <Sider
               width={300}
               theme="light"
             >
               <PropertyEditor />
-            </Sider>
+            </Sider> */}
           </Layout>
         </Layout>
       </GraphProvider>

@@ -16,16 +16,17 @@ import { Graph, Shape } from '@antv/x6';
 
 export const useGraph = () => {
   const [isReady, setIsReady] = useState(false);
+  const containerParentRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const miniMapRef = useRef<HTMLDivElement>(null);
   const [graphEntity, setGraphEntity] = useState<Graph | null>(null);
   const [dndEntity, setDndEntity] = useState<Dnd | null>(null);
 
   const getGraphAreaInfo = useCallback(() => {
-    const graphWidth = containerRef.current?.parentElement?.offsetWidth || 800;
-    const graphHeight = containerRef.current?.parentElement?.offsetHeight || 600;
+    const graphWidth = (containerParentRef.current?.parentElement?.offsetWidth || 1000) - 200;
+    const graphHeight = containerParentRef.current?.parentElement?.offsetHeight || 600;
     return { graphWidth, graphHeight };
-  }, [containerRef]);
+  }, [containerParentRef]);
 
   useEffect(() => {
     if (!containerRef.current || !miniMapRef.current) {
@@ -260,5 +261,5 @@ export const useGraph = () => {
     };
   }, []);
 
-  return { containerRef, miniMapRef, graphEntity, dndEntity, getGraphAreaInfo, isReady };
+  return { containerParentRef, containerRef, miniMapRef, graphEntity, dndEntity, getGraphAreaInfo, isReady };
 };

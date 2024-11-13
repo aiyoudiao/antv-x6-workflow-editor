@@ -5,14 +5,52 @@ import React, { useEffect, useRef } from 'react';
 import { useGraphContext } from '../../context/graph.context';
 import { useGraph } from '../../hooks/useGraph';
 import { useDataContext } from '../../context/data.context';
+import { Graph } from '@antv/x6';
 
 interface CanvasProps {
 }
 
+
+
+
 const Canvas: React.FC<CanvasProps> = () => {
-  const { containerRef, miniMapRef, graphEntity: graph, dndEntity: dnd, getGraphAreaInfo, isReady } = useGraph();
+  const { containerParentRef, containerRef, miniMapRef, graphEntity: graph, dndEntity: dnd, getGraphAreaInfo, isReady } = useGraph();
   const { setGraph, setGraphDnd, setHistory } = useGraphContext()
   const { setSelectedNode } = useDataContext()
+
+
+  // 防抖函数
+  const debounce = useCallback((func: Function, wait: number) => {
+    let timeout: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  }, []);
+
+  const handleResize = useCallback(debounce((graph: Graph) => {
+    const { graphWidth, graphHeight } = getGraphAreaInfo();
+    graph.resize(graphWidth, graphHeight);
+  }, 200), [getGraphAreaInfo, graph]);
+
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
+    const containerParent = containerParentRef.current;
+    if (!containerParent || !graph) return;
+
+    // 监听画布外层容器的大小变化
+    const resizeObserver = new ResizeObserver(() => handleResize(graph));
+
+    resizeObserver.observe(containerParent);
+
+    return () => {
+      resizeObserver.unobserve(containerParent);
+      resizeObserver.disconnect();
+    };
+  }, [containerParentRef, graph]);
 
 
   useEffect(() => {
@@ -23,11 +61,6 @@ const Canvas: React.FC<CanvasProps> = () => {
     if (!containerRef.current || !miniMapRef.current || !graph || !dnd) {
       return;
     }
-    // 监听画布大小变化
-    containerRef.current.parentElement!.addEventListener('resize', () => {
-      const { graphWidth, graphHeight } = getGraphAreaInfo();
-      graph.resize(graphWidth, graphHeight);
-    });
 
     graph.on('history:change', () => {
       setHistory({
@@ -177,7 +210,7 @@ const Canvas: React.FC<CanvasProps> = () => {
   }, [isReady])
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full" ref={containerParentRef}>
       <div
         ref={containerRef}
         className="absolute w-full h-full top-0 left-0"
