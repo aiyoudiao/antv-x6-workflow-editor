@@ -113,6 +113,9 @@ importers:
       nprogress:
         specifier: 0.2.0
         version: 0.2.0
+      overlay-hook:
+        specifier: ^1.0.0
+        version: 1.0.0(antd@5.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -3882,6 +3885,15 @@ packages:
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
+
+  overlay-hook@1.0.0:
+    resolution: {integrity: sha512-eDdOJXOVy7TOW6jfJNozmErQ0poSInfVfnf0ENZazc3fFh4llFX1C+quG2sIWc44D+2kx6YeUiUiiOiMW+lC3A==}
+    peerDependencies:
+      antd: ^4 || ^5
+      react: ^18 || ^19
+    peerDependenciesMeta:
+      antd:
+        optional: true
 
   p-limit@2.3.0:
     resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
@@ -9243,6 +9255,12 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
       word-wrap: 1.2.5
+
+  overlay-hook@1.0.0(antd@5.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+    optionalDependencies:
+      antd: 5.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   p-limit@2.3.0:
     dependencies:

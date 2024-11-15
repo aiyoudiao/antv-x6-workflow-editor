@@ -5,10 +5,17 @@ import { Card, ConfigProvider } from 'antd';
 
 import { ArrowRightOutlined, EditOutlined, EllipsisOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 
+import { useOverlay } from 'overlay-hook';
 import { useDataContext } from '../../../../context/data.context';
+import { SponsorModal } from './components/SponsorModal';
 
 export const SponsorNode = ({ node }: { node: Node }) => {
   const { loading } = useDataContext();
+  const [openOverlay] = useOverlay<boolean>();
+
+  const handleSetting = async () => {
+    openOverlay(<SponsorModal title="发起人" />);
+  };
 
   return (
     <ConfigProvider
@@ -25,7 +32,14 @@ export const SponsorNode = ({ node }: { node: Node }) => {
       <Card
         size="small"
         loading={loading}
-        actions={[<EditOutlined key="edit" />, <SettingOutlined key="setting" />, <EllipsisOutlined key="ellipsis" />]}
+        actions={[
+          <EditOutlined key="edit" />,
+          <SettingOutlined
+            key="setting"
+            onClick={handleSetting}
+          />,
+          <EllipsisOutlined key="ellipsis" />
+        ]}
         title={
           <span className="text-white">
             <UserOutlined /> 发起人
