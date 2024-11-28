@@ -380,11 +380,30 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'workflow_config-manage',
+        path: 'config-manage',
+        component: 'view.workflow_config-manage',
+        meta: {
+          title: '流程配置管理',
+          i18nKey: 'route.workflow_config-manage'
+        }
+      },
+      {
+        name: 'workflow_template-list',
+        path: 'template-list',
+        component: 'view.workflow_template-list',
+        meta: {
+          title: '流程管理列表',
+          i18nKey: 'route.workflow_template-list'
+        }
+      },
+
+      {
         name: 'workflow_instance',
         path: 'instance',
         component: 'view.workflow_instance',
         meta: {
-          title: '流程实例',
+          title: '流程管理实例',
           i18nKey: 'route.workflow_instance'
         }
       },
@@ -393,19 +412,10 @@ export const generatedRoutes: GeneratedRoute[] = [
         path: 'template-editor',
         component: 'view.workflow_template-editor',
         meta: {
-          title: '流程模板设计',
+          title: '流程管理模板设计',
           i18nKey: 'route.workflow_template-editor'
         }
       },
-      {
-        name: 'workflow_template-list',
-        path: 'template-list',
-        component: 'view.workflow_template-list',
-        meta: {
-          title: '流程模板列表',
-          i18nKey: 'route.workflow_template-list'
-        }
-      }
     ]
   }
 ];

@@ -19,5 +19,7 @@
   "prettier.enable": false,
   "typescript.tsdk": "node_modules/typescript/lib",
   "unocss.root": ["./"],
-  "i18n-ally.sourceLanguage": "zh-cn"
+  "i18n-ally.sourceLanguage": "zh-cn",
+  "commentTranslate.targetLanguage": "zh-CN",
+  "commentTranslate.source": "intellsmi.comment-translate-ali.cloud"
 }

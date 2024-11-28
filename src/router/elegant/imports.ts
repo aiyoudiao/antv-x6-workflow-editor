@@ -43,6 +43,7 @@ export const pages: Record<LastLevelRouteKey, LazyRouteFunction<CustomRouteObjec
   "multi-menu_first_child": () => import("@/pages/multi-menu/first_child/index.tsx"),
   "multi-menu_second_child_home": () => import("@/pages/multi-menu/second_child_home/index.tsx"),
   "user-center": () => import("@/pages/user-center/index.tsx"),
+  "workflow_config-manage": () => import("@/pages/workflow/config-manage/index.tsx"),
   workflow_instance: () => import("@/pages/workflow/instance/index.tsx"),
   "workflow_template-editor": () => import("@/pages/workflow/template-editor/index.tsx"),
   "workflow_template-list": () => import("@/pages/workflow/template-list/index.tsx"),

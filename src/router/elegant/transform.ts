@@ -247,6 +247,7 @@ const routeMap: RouteMap = {
   "multi-menu_second_child_home": "home",
   "user-center": "/user-center",
   "workflow": "/workflow",
+  "workflow_config-manage": "config-manage",
   "workflow_instance": "instance",
   "workflow_template-editor": "template-editor",
   "workflow_template-list": "template-list"

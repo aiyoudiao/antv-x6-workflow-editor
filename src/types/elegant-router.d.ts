@@ -66,6 +66,7 @@ declare module "@elegant-router/types" {
     "multi-menu_second_child_home": "home";
     "user-center": "/user-center";
     "workflow": "/workflow";
+    "workflow_config-manage": "config-manage";
     "workflow_instance": "instance";
     "workflow_template-editor": "template-editor";
     "workflow_template-list": "template-list";
@@ -170,6 +171,7 @@ declare module "@elegant-router/types" {
     | "multi-menu_first_child"
     | "multi-menu_second_child_home"
     | "user-center"
+    | "workflow_config-manage"
     | "workflow_instance"
     | "workflow_template-editor"
     | "workflow_template-list"

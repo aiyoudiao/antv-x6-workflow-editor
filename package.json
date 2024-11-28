@@ -51,6 +51,7 @@
     "update-pkg": "sa update-pkg"
   },
   "dependencies": {
+    "@ant-design/pro-components": "^2.8.2",
     "@antv/x6": "^2.18.1",
     "@antv/x6-plugin-clipboard": "^2.1.6",
     "@antv/x6-plugin-dnd": "^2.1.1",

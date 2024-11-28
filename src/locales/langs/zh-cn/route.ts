@@ -45,10 +45,11 @@ const route: App.I18n.Schema['translation']['route'] = {
   'login_code-login': '验证码登录',
   'login_pwd-login': '密码登录',
   'login_reset-pwd': '重置密码',
-  workflow: '流程管理',
-  workflow_instance: '流程实例',
-  'workflow_template-list': '流程模板列表',
-  'workflow_template-editor': '流程模板设计'
+  workflow: '审批流管理',
+  workflow_instance: '流程管理实例',
+  'workflow_template-list': '流程管理列表',
+  'workflow_template-editor': '流程管理模板设计',
+  'workflow_config-manage': '流程配置管理'
 };
 
 export default route;
